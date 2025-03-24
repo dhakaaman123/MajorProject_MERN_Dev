@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wanderlust</title>
+</head>
+<body>
+    <h1>Edit This Listing</h1>
+  
+  <!-- Form for editing a listing -->
+  <form method="post"  action="/listings/<%= listing._id %>?_method=PUT" >
+    <input type="hidden" name="_method" value="PUT" />
+
+    <!-- Title Input -->
+    <label for="title">Title:</label>
+    <input type="text" name="listing[title]" id="title" value="<%= listing.title %>" required />
+    <br />
+
+    <!-- Description Input -->
+    <label for="description">Description:</label>
+    <textarea name="listing[description]" id="description" required><%= listing.description %></textarea>
+    <br />
+
+    <!-- Image URL Input -->
+    <label for="url">Image URL:</label>
+    <input type="url" name="listing[image][url]" id="url" value="<%= listing.image.url %>" required />
+    <br />
+
+    <!-- Price Input -->
+    <label for="price">Price (in Rupees):</label>
+    <input type="number" name="listing[price]" id="price" value="<%= listing.price %>" min="0" step="0.01" required />
+    <br/>
+
+    <!-- Location Input -->
+    <label for="location">Location:</label>
+    <input type="text" name="listing[location]" id="location" value="<%= listing.location %>" required />
+    <br/>
+
+    <!-- Country Input -->
+    <label for="country">Country:</label>
+    <input type="text" name="listing[country]" id="country" value="<%= listing.country %>" required />
+    <br/>
+
+    <!-- Submit Button -->
+    <button type="submit">Update Listing</button>
+  </form>
+  
+    
+</body>
+</html>
