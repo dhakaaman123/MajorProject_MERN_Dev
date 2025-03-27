@@ -8,12 +8,13 @@
       <br>
   
   <!-- Form to submit a new listing -->
-  <form action="/listings" method="post">
+  <form action="/listings" method="post"  class="needs-validation" novalidate>
     <!-- Title Input -->
 
    <div class="mb-3" >
     <label for="title" class="form-label">Title:</label>
     <input type="text" name="listing[title]"  class="form-control" id="title" placeholder="Add a catchy title" required />
+    <div class="valid-feedback"> Title Looks Good !</div>
    </div>
     
 
@@ -21,6 +22,7 @@
      <div class="mb-3">
       <label for="description" class="form-label">Description:</label>
     <textarea name="listing[description]" class="form-control" id="description" placeholder="Enter description" required ></textarea>
+    <div class="invalid-feedback">Please enter a short description</div>
     </div>
     
   
@@ -42,7 +44,8 @@
       <!-- Price Input -->
      <div class="mb-3" >
       <label for="price" class="form-label">Price (in Ruppes):</label>
-    <input type="number" name="listing[price]"class="form-control" id="price" placeholder="12000" min="0" step="0.01" required />
+    <input  name="listing[price]"class="form-control" id="price" placeholder="12000" min="0" step="0.01" required />
+    <div class="invalid-feedback">Price Should be valid</div>
 
      </div>
 
@@ -54,6 +57,7 @@
      <div class="mb-3  col-md-4 ">
       <label for="country" class="form-label">Country:</label>
       <input type="text" name="listing[country]" class="form-control" id="country" placeholder="India" required />
+      <div class="invalid-feedback">Country name should be valid</div>
 
      </div>
 
@@ -63,6 +67,7 @@
      <div class="mb-3  col-md-8 ">
       <label for="location" class="form-label">Location:</label>
     <input type="text" name="listing[location]" class="form-control" id="location" placeholder="Rohtak,Haryana" required />
+    <div class="invalid-feedback">Location Should be valid</div>
 
      </div>
     
