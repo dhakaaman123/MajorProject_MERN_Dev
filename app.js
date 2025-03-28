@@ -9,6 +9,7 @@ const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
 const {listingSchema} = require("./Schema.js");
+app.use(methodOverride('_method'));
 main()
 .then(()=>{
     console.log("Connected to mongodb sucessfully");
