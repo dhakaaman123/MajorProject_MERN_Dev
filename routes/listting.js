@@ -1,0 +1,112 @@
+const express = require("express");
+const router = express.Router();
+const wrapAsync = require("../utils/wrapAsync.js");
+const {listingSchema} = require("../Schema.js");
+const ExpressError = require("../utils/ExpressError.js");
+const Listing = require("../models/listing.js");
+
+
+const ValidateListing = (req,res,next)=>{
+    let {error} = listingSchema.validate(req.body);
+    if(error){
+        let errMsg = error.details.map((el)=>el.message).join(",");
+        throw new ExpressError(404,errMsg);
+
+    }
+    else{
+        next();
+    }
+}
+
+
+// get all listings 
+
+router.get("/", wrapAsync(
+    async(req,res)=>{
+        const allListings= await Listing.find({});
+        res.render("./listings/index.ejs",{allListings});
+    }
+));
+
+// Adding new listing
+
+router.get("/new", (req, res) => {
+    try {
+        res.render("listings/new");
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+// show specific listing
+
+router.get("/:id", wrapAsync(async(req,res,next)=>{
+    let {id} = req.params;
+    const listing= await Listing.findById(id).populate("reviews");
+    if(!listing){
+        req.flash("error","Listing you requested for does not exist");
+        res.redirect("/listing");
+    }
+    res.render("./listings/show.ejs",{listing});
+   
+
+}))
+
+//posting new listing
+
+router.post("/", ValidateListing, wrapAsync (
+    async(req,res,next)=>{
+            let newlisting = new Listing ( req.body.listing);
+            await newlisting.save();
+            req.flash("success","New listing Created");
+            res.redirect("/listings");
+           
+    }
+))
+
+// editing existing listing
+
+router.get("/:id/edit", wrapAsync(
+    async (req,res)=>{
+        const {id}= req.params;
+          
+          let listing=await Listing.findById(id);
+          if(!listing){
+            req.flash("error","Listing you requested for does not exist");
+            res.redirect("/listing");
+        }
+        
+          res.render("./listings/edit.ejs",{listing});
+        
+    
+    
+    }
+))
+
+// Deleting existing listing
+
+router.delete("/:id", wrapAsync(async (req,res)=>{
+    const {id}= req.params;
+      await Listing.findByIdAndDelete(id);
+      req.flash("success","listing is Deleted");
+     res.redirect("/listings");
+    
+}) );
+
+// put request for Editing a post
+
+router.put("/:id", ValidateListing, wrapAsync(async(req,res)=>{
+
+ 
+    const {id}= req.params;
+
+    let updateListing=  await Listing.findByIdAndUpdate(id,{...req.body.listing});
+    req.flash("success"," listing is Updated ");
+    res.redirect(`/listings/${id}`);
+    // console.log(updateListing);
+      
+
+}));
+
+module.exports = router;

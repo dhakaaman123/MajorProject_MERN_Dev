@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const port = 8080;
 const mongoose = require("mongoose");
+const session = require("express-session");
+const flash = require("connect-flash");
 const Listing = require("./models/listing.js");
 const path = require("path");
 const methodOverride = require('method-override');
@@ -11,6 +13,12 @@ const ExpressError = require("./utils/ExpressError.js");
 const {listingSchema} = require("./Schema.js");
 const Review = require("./models/review.js");
 const {reviewSchema} = require("./Schema.js");
+
+const listing = require("./routes/listting.js");
+const reviews= require("./routes/review.js");
+
+
+
 app.use(methodOverride('_method'));
 main()
 .then(()=>{
@@ -32,141 +40,34 @@ app.use(methodOverride('_method'));
 app.engine("ejs" ,ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
-
+const sessionOptions = {
+    secret: "mySuperSecretString",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly:true,
+    },
+    
+};
 app.get("/",(req,res)=>{
     res.send("hii iam root");
 });
 
 
-// Schema Validation maintaine by JOi
-const ValidateListing = (req,res,next)=>{
-    let{error} = listingSchema.validate(req.body);
-    if(error){
-        let errMsg = error.details.map((el)=>el.message).join(",");
-        throw new ExpressError(404,errMsg);
-
-    }
-    else{
-        next();
-    }
-}
-const ValidateReview = (req,res,next)=>{
-    let{error} = reviewSchema.validate(req.body);
-    if(error){
-        let errMsg = error.details.map((el)=>el.message).join(",");
-        throw new ExpressError(404,errMsg);
-
-    }
-    else{
-        next();
-    }
-}
-
-
-app.get("/listings", wrapAsync(
-    async(req,res)=>{
-        const allListings= await Listing.find({});
-        res.render("./listings/index.ejs",{allListings});
-    }
-));
-
-app.get("/listings/new", (req, res) => {
-    try {
-        res.render("listings/new");
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Internal Server Error");
-    }
-});
-
-app.get("/listings/:id", wrapAsync(async(req,res,next)=>{
-    let {id} = req.params;
-    const listing= await Listing.findById(id).populate("reviews");
-    res.render("./listings/show.ejs",{listing});
-   
-
-}))
-
-app.post("/listings", ValidateListing, wrapAsync (
-    async(req,res,next)=>{
-            let newlisting = new Listing ( req.body.listing);
-            await newlisting.save();
-            res.redirect("/listings");
-           
-    }
-))
-
-app.get("/listings/:id/edit", wrapAsync(
-    async (req,res)=>{
-        const {id}= req.params;
-          
-          let listing=await Listing.findById(id);
-        
-          res.render("./listings/edit.ejs",{listing});
-        
-    
-    
-    }
-))
-
-app.post("/listings/:id/reviews", ValidateReview , wrapAsync (async(req,res)=>{
-    let listing = await Listing.findById(req.params.id);
-    let newReview = new Review(req.body.review);
-    listing.reviews.push(newReview);
-    await newReview.save();
-    await listing.save();
-    console.log("new Review saved");
-    res.redirect(`/listings/${req.params.id}`);
-
-}))
+app.use(session(sessionOptions));
+app.use(flash());
+app.use((req,res,next)=>{
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
+})
 
 
 
-app.put("/listings/:id", ValidateListing, wrapAsync(async(req,res)=>{
-
- 
-    const {id}= req.params;
-
-    let updateListing=  await Listing.findByIdAndUpdate(id,{...req.body.listing});
-    res.redirect(`/listings/${id}`);
-    // console.log(updateListing);
-      
-
-}));
-
-app.delete("/listings/:id", wrapAsync(async (req,res)=>{
-    const {id}= req.params;
-      await Listing.findByIdAndDelete(id);
-     res.redirect("/listings");
-    
-}) );
-
-app.delete("/listings/:id/reviews/:reviewId",wrapAsync(async(req,res)=>{
-    const {id,reviewId} = req.params;
-    await Listing.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});
-    await Review.findByIdAndDelete(reviewId);
-    res.redirect(`/listings/${id}`);
-
-    
-}))
-
-
-
-
-// app.get("/testListing", async(req,res)=>{
-//     let sampleListing = new Listing({
-//         title:"My New villa",
-//         description:"By the beach",
-//         price:1200,
-//         location:"Calangute,Goa",
-//         country:"India",
-
-//     })
-//     await sampleListing.save();
-//     console.log("sample was saved");
-//     res.send("successful testing");
-
-// })
+app.use("/listings",listing);
+app.use("/listings/:id/reviews",reviews);
 
 app.all("*",(req,res,next)=>{
     next(new ExpressError(404,"page not found"));
