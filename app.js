@@ -18,9 +18,10 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
+const userRouter = require("./routes/user.js");
 const listingRouter = require("./routes/listting.js");
 const reviewsRouter= require("./routes/review.js");
-const userRouter = require("./routes/user.js");
+
 
 
 
@@ -72,27 +73,30 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req,res,next)=>{
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
+    res.locals.currUser = req.user;
     next();
 });
 
-app.get("/deompuser",async(req,res)=>{
-    let fakeUser = new User({
-        email:"student@gmail.com",
-        username:"AmanDhaka",
-
-    });
-   let registeredUser =  await User.register(fakeUser,"helloworld");
-   res.send(registeredUser);
-
-})
-
-
-
-
-
+app.use("/",userRouter);
 app.use("/listings",listingRouter);
 app.use("/listings/:id/reviews",reviewsRouter);
-app.use("/",userRouter);
+// app.get("/deompuser",async(req,res)=>{
+//     let fakeUser = new User({
+//         email:"student@gmail.com",
+//         username:"AmanDhaka",
+
+//     });
+//    let registeredUser =  await User.register(fakeUser,"helloworld");
+//    res.send(registeredUser);
+
+// })
+
+
+
+
+
+
+
 
 app.all("*",(req,res,next)=>{
     next(new ExpressError(404,"page not found"));
@@ -101,7 +105,7 @@ app.all("*",(req,res,next)=>{
 app.use((err,req,res,next)=>{
 
     let {statusCode=500 ,message="Something Went wrong"}= err;
-    res.render("error",{message});
+    res.render("error",{err});
 });
 
 app.listen(port , ()=>{
