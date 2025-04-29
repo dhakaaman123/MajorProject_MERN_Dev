@@ -42,10 +42,10 @@ router.post(
     saveRedirectUrl,
     passport.authenticate("local", { failureRedirect: '/login', failureFlash: true }),
     (req, res) => {
-        req.flash("success", "Welcome back to WanderLust!");
+        req.flash("success", `Welcome back to WanderLust, ${req.user.username}! Your next adventure awaits.`);
         
       
-        res.redirect( res.locals.redirectUrl);
+        res.redirect( res.locals.redirectUrl || "/listings");
     }
 );
 
