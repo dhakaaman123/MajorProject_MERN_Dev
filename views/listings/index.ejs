@@ -1,36 +1,50 @@
 <% layout("/layouts/boilerplate") %>
 <body>
+  <div class="container mt-5 mb-5">
+    <div class="container mt-5 mb-5">
+      <% if (currUser) { %>
+        <h3 class="text-muted">
+          Hello, <span class="fw-semibold text-primary"><%= currUser.username %></span> — here are your listings
+        </h3>
+        
+      <% } else { %>
+        <h3 class="text-muted">Hello, <span class="fst-italic text-secondary">anonymous</span> — here are your listings</h3>
+      <% } %>
+    
+      <!-- <h1 class="text-left mb-4 mt-2">All Listings</h1> -->
+    
+    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-4">
 
-    <h1>All Listings</h1>
+      <% for (let listing of allListings) { %>
+        <div class="col">
+          <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
+            <div class="card h-100 shadow-sm listing-card border-0">
+              <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_img" style="height: 15rem; object-fit: cover; border-radius: 0.5rem 0.5rem 0 0;">
+              <div class="card-body">
+                <h5 class="card-title "><%= listing.title %></h5>
+                <p class="card-text text-muted mb-1">&#8377;<%= listing.price.toLocaleString("en-IN") %>/night</p>
 
- <!-- <a href="/listings/new">
-    <button type="button">Create New Listing</button>
- </a> -->
-
- <div class="row  row-cols-lg-3  row-cols-md-2 row-cols-sm-1" >
-     <% for( let listing of allListings ) { %>
-        <a href="/listings/<%= listing.id %>" class="listing-link">
-
-            <div class="card listing-card" >
-                <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_img" style="height:20rem" >
-                <div class="card-img-overlay"></div>
-                <div class="card-body">
-                  <p class="card-text">
-                   <b> <%= listing.title %></b> <br>
-                   &#8377; <%= listing.price.toLocaleString("en-IN")%>/night
-            
-            
+                <% if (listing.averageRating) { %>
+                  <p class="card-text mb-0">
+                    <% for (let i = 1; i <= 5; i++) { %>
+                      <% if (i <= Math.floor(listing.averageRating)) { %>
+                        <i class="fas fa-star text-warning"></i>
+                      <% } else if (i - listing.averageRating < 1) { %>
+                        <i class="fas fa-star-half-alt text-warning"></i>
+                      <% } else { %>
+                        <i class="far fa-star text-warning"></i>
+                      <% } %>
+                    <% } %>
+                    <span class="text-muted ms-1">(<%= listing.averageRating %>)</span>
                   </p>
-                </div>
+                <% } else { %>
+                  <p class="text-muted fst-italic">No ratings yet</p>
+                <% } %>
               </div>
-            
-        </a>
-
-    
-     <% } %>
-    
- </div>
-
-
-    
+            </div>
+          </a>
+        </div>
+      <% } %>
+    </div>
+  </div>
 </body>

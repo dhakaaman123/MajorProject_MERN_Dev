@@ -1,31 +1,32 @@
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top ">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/"><i class="fa-solid fa-compass "></i> </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-link"  href="/">Home</a>
-          <a class="nav-link" href="/listings">All Listings</a>
-          <a class="nav-link" href="/listings/new">Add New Listnig</a>
-          
-        </div>
-        <div class="navbar-nav ms-auto">
-          <%   if(!currUser){ %>
-            <a class="nav-link"  href="/signup">Sign Up</a>
-            <a class="nav-link" href="/login">Log in</a>
+<nav class="navbar navbar-expand-md bg-light border-bottom shadow-sm sticky-top">
+  <div class="container-fluid px-4">
+    <!-- Brand -->
+    <a class="navbar-brand fw-bold text-primary" href="/listings">
+      <i class="fa-solid fa-compass me-2"></i>WanderLust
+    </a>
 
-          <% } %>
-          <%   if(currUser){ %>
-        
-            <a class="nav-link" href="/logout">Logout</a>
+    <!-- Toggler -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-          <% } %>
-        
-          
-          
-        </div>
+    <!-- Links -->
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link fw-medium" href="/">Home</a>
+        <a class="nav-link fw-medium" href="/listings">All Listings</a>
+        <a class="nav-link fw-medium" href="/listings/new">Add New Listing</a>
+      </div>
+
+      <div class="navbar-nav ms-auto">
+        <% if (!currUser) { %>
+          <a class="nav-link fw-medium" href="/signup">Sign Up</a>
+          <a class="nav-link fw-medium" href="/login">Log In</a>
+        <% } else { %>
+          <span class="navbar-text me-2 text-muted">Hi, <%= currUser.username %></span>
+          <a class="nav-link fw-medium text-danger" href="/logout">Logout</a>
+        <% } %>
       </div>
     </div>
-  </nav>
+  </div>
+</nav>
