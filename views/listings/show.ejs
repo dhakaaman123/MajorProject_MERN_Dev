@@ -3,41 +3,39 @@
   <div class="container mt-3">
     <h3 class="text-center"><%= listing.title %></h3><br>
 
-    <!-- Card Section -->
-    <div class="row justify-content-center">
-      <div class="card col-md-6 show-card listing-card">
-        <img src="<%= listing.image.url %>" class="card-img-top show-img" alt="Listing Image">
+    <!-- Image + Rating Section Side by Side -->
+    <div class="show-section">
+      <!-- Listing Image Card -->
+      <div class="card listing-card">
+        <img src="<%= listing.image.url %>" class="show-img" alt="Listing Image">
         <div class="card-body">
-          <p class="card-text">
-            <i>Owned by: <%= listing.owner.username %></i><br>
-          </p>
-
-          <p class="card-text">
-            &#8377;<%= listing.price.toLocaleString("en-IN") %><br>
-          </p>
-          <p class="card-text">
-            <%= listing.description %><br>
-          </p>
-          <p class="card-text">
-            <%= listing.location %><br>
-          </p>
-          <p class="card-text">
-            <%= listing.country %>
-          </p>
-
-          <!-- Moved Overall Rating Inside the Card -->
-          <div class="d-flex align-items-center justify-content-start mt-3">
-            <span class="fw-bold me-2">Overall Rating:</span>
-            <% for (let i = 1; i <= 5; i++) { %>
-              <i class="fas fa-star <%= i <= averageRating ? 'text-warning' : 'text-muted' %>"></i>
-            <% } %>
-            <span class="ms-2 text-muted">(<%= averageRating %> / 5)</span>
-          </div>
+          <p><i>Owned by:</i> <%= listing.owner.username %></p>
+          <p><strong>Price:</strong> ₹<%= listing.price.toLocaleString("en-IN") %></p>
+          <p><strong>Description:</strong> <%= listing.description %></p>
+          <p><strong>Location:</strong> <%= listing.location %></p>
+          <p><strong>Country:</strong> <%= listing.country %></p>
         </div>
+      </div>
+
+      <!-- Circular Rating -->
+      <div class="rating-box">
+        <svg width="220" height="220" viewBox="0 0 36 36" class="circular-chart">
+          <path class="circle-bg"
+                d="M18 2.0845
+                   a 15.9155 15.9155 0 0 1 0 31.831
+                   a 15.9155 15.9155 0 0 1 0 -31.831"/>
+          <path class="circle"
+                stroke-dasharray="<%= (averageRating / 5) * 100 %>, 100"
+                d="M18 2.0845
+                   a 15.9155 15.9155 0 0 1 0 31.831
+                   a 15.9155 15.9155 0 0 1 0 -31.831"/>
+          <text x="18" y="20.35" class="percentage"><%= averageRating %></text>
+        </svg>
+        <div class="rating-text">Overall Rating: <%= averageRating %> / 5</div>
       </div>
     </div>
 
-    <!-- Buttons Section -->
+    <!-- Owner Buttons -->
     <% if(currUser && listing.owner._id.equals(currUser._id)) { %>
       <div class="row justify-content-center mt-3">
         <div class="col-md-6 text-center">
@@ -51,33 +49,27 @@
 
     <hr>
 
-    <!-- Leave a Review Section -->
+    <!-- Review Form -->
     <% if (currUser) { %>
       <div class="col-6 offset-3">
         <h4 class="text-center">Leave a Review</h4>
         <form action="/listings/<%= listing.id %>/reviews" method="post" novalidate class="needs-validation">
-          <!-- <div class="mb-3 mt-3">
-            <label for="rating" class="form-label">Rating</label>
-            <input type="range" name="review[rating]" min="1" max="5" id="rating" class="form-range">
-          </div> -->
           <div class="mb-3 mt-3">
             <label for="rating" class="form-label">Rating</label>
-          <fieldset class="starability-slot">
-           
-          
-            <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked aria-label="No rating." />
-            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-            <label for="first-rate1" title="Terrible">1 star</label>
-            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-            <label for="first-rate2" title="Not good">2 stars</label>
-            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-            <label for="first-rate3" title="Average">3 stars</label>
-            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-            <label for="first-rate4" title="Very good">4 stars</label>
-            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-            <label for="first-rate5" title="Amazing">5 stars</label>
-          </fieldset>
-        </div>
+            <fieldset class="starability-slot">
+              <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked />
+              <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+              <label for="first-rate1" title="Terrible">1 star</label>
+              <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+              <label for="first-rate2" title="Not good">2 stars</label>
+              <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+              <label for="first-rate3" title="Average">3 stars</label>
+              <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+              <label for="first-rate4" title="Very good">4 stars</label>
+              <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+              <label for="first-rate5" title="Amazing">5 stars</label>
+            </fieldset>
+          </div>
           <div class="mb-3 mt-3">
             <label for="comment" class="form-label">Comment</label>
             <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control" required></textarea>
@@ -89,7 +81,7 @@
       </div>
     <% } %>
 
-    <!-- All Reviews Section -->
+    <!-- All Reviews -->
     <div class="col-6 offset-3">
       <h4>All Reviews</h4>
       <div class="row">
@@ -97,19 +89,9 @@
           <div class="card col-md-5 mb-3 ms-3">
             <div class="card-body">
               <h5 class="card-title">@<%= review.author.username %></h5>
-              <p class="starability-result" data-rating="<%= review.rating %>">
-                Rated: 3 stars
-              </p>
-              <p class="card-text">
-                <%= review.comment %>
-              </p>
-             
-
-              
-          
+              <p class="starability-result" data-rating="<%= review.rating %>"></p>
+              <p class="card-text"><%= review.comment %></p>
             </div>
-
-            <!-- Delete Review Option (Only for the review's author) -->
             <% if (currUser && review.author._id.equals(currUser._id)) { %>
               <form action="/listings/<%= listing.id %>/reviews/<%= review.id %>?_method=DELETE" method="post" class="d-inline-block">
                 <button type="submit" class="btn btn-sm btn-dark">Delete</button>
@@ -120,11 +102,20 @@
       </div>
     </div>
   </div>
+
+  <!-- Rating Ring Fill Animation Script -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const circle = document.querySelector('.circle');
+      const rating = parseFloat("<%= averageRating %>");
+      const strokeVal = (rating / 5) * 100;
+      if (circle) {
+        circle.style.setProperty('--fill-value', strokeVal);
+      }
+    });
+  </script>
 </body>
 
-            
-            
-        
 
        
   

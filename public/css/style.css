@@ -115,6 +115,218 @@ body{
 
 
 
+/* --- Enhanced Circular Rating Ring --- */
+.show-section {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 2rem;
+   justify-content: center;
+   align-items: stretch;
+   margin-bottom: 2rem;
+ }
+
+ .listing-card, .rating-box {
+   flex: 1 1 500px;
+   border-radius: 15px;
+   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+   background-color: #fff;
+   padding: 1rem;
+ }
+
+ .listing-card {
+   max-width: 750px;
+   max-height: 500px;
+   display: flex;
+   flex-direction: column;
+ }
+
+ .show-img {
+   width: 100%;
+   /* height: auto; */
+   border-radius: 10px;
+   transition: transform 0.4s ease-in-out, box-shadow 0.3s;
+ }
+
+ .show-img:hover {
+   transform: scale(1.03);
+   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+ }
+
+ .card-body {
+   margin-top: 1rem;
+ }
+
+ .card-body p {
+   font-size: 1rem;
+   margin-bottom: 0.6rem;
+   color: #444;
+ }
+
+ .card-body i {
+   font-weight: 600;
+   color: #666;
+ }
+
+ /* Rating Box */
+ .rating-box {
+   margin-top: 3rem;
+   max-width: 250px;
+   max-height: 350px;;
+   background-color: #fffbea;
+   text-align: center;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   padding: 2rem;
+   transition: transform 0.3s ease-in-out;
+ }
+
+ .rating-box:hover {
+   transform: scale(1.02);
+ }
+
+ .circular-chart {
+   max-width: 100%;
+   max-height: 280px;
+   transform: rotate(-90deg);
+   margin: auto;
+ }
+
+ .circle-bg {
+   fill: none;
+   stroke: #eee;
+   stroke-width: 3.8;
+ }
+
+ .circle {
+   fill: none;
+   stroke: gold;
+   stroke-width: 3;
+   stroke-linecap: round;
+   stroke-dasharray: 0, 100;
+   animation: fill-animation 1.5s ease-out forwards;
+ }
+
+ @keyframes fill-animation {
+   to {
+     stroke-dasharray: var(--fill-value, 70), 100;
+   }
+ }
+
+ .percentage {
+   fill: goldenrod;
+   font-family: 'Segoe UI', sans-serif;
+   font-size: 0.7em;
+   text-anchor: middle;
+   transform: rotate(90deg);
+   transform-origin: center;
+   opacity: 0;
+   animation: fadeIn 1.2s ease-in forwards 0.5s;
+ }
+
+ @keyframes fadeIn {
+   to {
+     opacity: 1;
+   }
+ }
+
+ .rating-text {
+   color: goldenrod;
+   font-size: 1rem;
+   font-weight: 500;
+   margin-top: 1rem;
+ }
+
+ @media (max-width: 768px) {
+   .show-section {
+     flex-direction: column;
+     align-items: center;
+   }
+
+   .listing-card, .rating-box {
+     max-width: 100%;
+   }
+   .rating-box{
+      max-width: 60%;
+      max-height: 280px;
+      margin-bottom:1rem;
+      margin-top: 1rem;
+     
+   }
+ }
 
 
+
+
+ /* footer section */
+
+/* Base Footer Styles */
+.footer {
+   background-color: #141414;
+   color: #ccc;
+   padding: 20px 0;
+   font-family: 'Segoe UI', sans-serif;
+   font-size: 14px;
+ }
+ 
+ .footer-wrapper {
+   max-width: 1100px;
+   margin: 0 auto;
+   padding: 0 20px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   flex-wrap: wrap;
+ }
+ 
+ /* Social Icons */
+ .footer-socials a {
+   color: #ccc;
+   font-size: 18px;
+   margin: 0 10px;
+   transition: color 0.3s ease;
+ }
+ .footer-socials a:hover {
+   color: #fbbf24; /* golden hover */
+ }
+ 
+ /* Center Text */
+ .footer-center {
+   text-align: center;
+ }
+ .footer-center .heart {
+   color: red;
+ }
+ 
+ /* Footer Links */
+ .footer-links a {
+   color: #ccc;
+   margin: 0 8px;
+   text-decoration: none;
+   transition: color 0.3s ease;
+ }
+ .footer-links a:hover {
+   color: white;
+ }
+ 
+ /* Responsive: stack nicely on mobile */
+ @media (max-width: 768px) {
+   .footer-wrapper {
+     flex-direction: column;
+     gap: 10px;
+     text-align: center;
+   }
+ 
+   .footer-socials {
+     order: 1;
+   }
+ 
+   .footer-center {
+     order: 2;
+   }
+ 
+   .footer-links {
+     order: 3;
+   }
+ }
  
