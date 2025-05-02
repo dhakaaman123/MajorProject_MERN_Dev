@@ -24,22 +24,28 @@
                 <h5 class="card-title "><%= listing.title %></h5>
                 <p class="card-text text-muted mb-1">&#8377;<%= listing.price.toLocaleString("en-IN") %>/night</p>
 
-                <% if (listing.averageRating) { %>
-                  <p class="card-text mb-0">
-                    <% for (let i = 1; i <= 5; i++) { %>
-                      <% if (i <= Math.floor(listing.averageRating)) { %>
-                        <i class="fas fa-star text-warning"></i>
-                      <% } else if (i - listing.averageRating < 1) { %>
-                        <i class="fas fa-star-half-alt text-warning"></i>
-                      <% } else { %>
-                        <i class="far fa-star text-warning"></i>
-                      <% } %>
-                    <% } %>
-                    <span class="text-muted ms-1">(<%= listing.averageRating %>)</span>
-                  </p>
-                <% } else { %>
-                  <p class="text-muted fst-italic">No ratings yet</p>
-                <% } %>
+                <% if (listing.averageRating) { 
+                  
+                  const fullStars = Math.floor(listing.averageRating);
+                  const hasHalfStar = listing.averageRating % 1 >= 0.25 && listing.averageRating % 1 < 0.75;
+                  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+             %>
+               <p class="card-text mb-0">
+                 <% for (let i = 0; i < fullStars; i++) { %>
+                   <i class="fas fa-star text-warning"></i>
+                 <% } %>
+                 <% if (hasHalfStar) { %>
+                   <i class="fas fa-star-half-alt text-warning"></i>
+                 <% } %>
+                 <% for (let i = 0; i < emptyStars; i++) { %>
+                   <i class="far fa-star text-warning"></i>
+                 <% } %>
+                 <span class="text-muted ms-1">(<%= listing.averageRating %>)</span>
+               </p>
+             <% } else { %>
+               <p class="text-muted fst-italic">No ratings yet</p>
+             <% } %>
+             
               </div>
             </div>
           </a>

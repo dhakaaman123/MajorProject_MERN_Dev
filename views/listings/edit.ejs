@@ -10,7 +10,7 @@
       
   
   <!-- Form for editing a listing -->
-  <form method="post"  action="/listings/<%= listing._id %>?_method=PUT" class="needs-validation" novalidate >
+  <form method="post"  action="/listings/<%= listing._id %>?_method=PUT" class="needs-validation" novalidate enctype="multipart/form-data" >
 
 
     <div class="mb-3">
@@ -31,16 +31,21 @@
   
 
     </div>
-
-
-
     <div class="mb-3">
-      <!-- Image URL Input -->
-    <label for="url" class="form-label">Image URL:</label>
-    <input type="url" name="listing[image][url]" class="form-control" id="url" value="<%= listing.image.url %>" required />
+      original image <br>
+     <img src="<%=originalImageUrl%>" alt="original image" class="img-fluid" style="max-width: 200px; max-height: 200px;">
 
     </div>
 
+
+
+   
+    <div class="mb-3">
+      <label for="url" class="form-label">Upload Image</label>
+    <input type="file" name="listing[image]" class="form-control" id="url"  />
+  
+
+    </div>
     <div class="row">
 
       <div class="mb-3 col-4">
